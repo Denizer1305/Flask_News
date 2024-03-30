@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100 translated-ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link type="text/css" href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  {% block title %}
+  {% if title %}
+  <title>{{title}}</title>
+  {% else %}
+  <title>Flask site</title>
+  {% endif %}
+  {% endblock %}
+</head>
+
+<body class="d-flex flex-column h-100">
+  {% block content%}
+  {%- block mainmenu-%}
+  <nav class="navbar navbar-expand-lg bg-body-secondary">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+          {% for el in menu%}
+          <li class="nav-item">
+            {%if el.title == 'Главная'%}
+            <a class="nav-link active" aria-current="page" href="{{el.url}}">{{el.title}}</a>
+            {%else%}
+              {% if current_user.is_authenticated %}
+                <a class="nav-link" href="{{el.url}}">{{el.title}}</a>
+              {% endif %}
+            {%endif%}
+          </li>
+          {%endfor%}
+
+        </ul>
+        <span class="navbar-text">
+          {% if current_user.is_authenticated %}
+            <a class="nav-link" href='/logout'>Выйти</a>
+          {% else %}
+            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#AuthorizationModal" id="authorizationClick" href="/">Авторизация</a>
+          {% endif %}
+        </span>
+
+      </div>
+    </div>
+  </nav>
+
+  <div class="modal fade" id="AuthorizationModal" tabindex="-1" aria-labelledby="exampleModalLabelAuthorization"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabelAuthorization">Авторизация</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/login" method="post">
+            <div class="mb-3">
+              <label for="AuthorizationInputEmail" class="form-label">Адрес электронной почты</label>
+              <input type="email" class="form-control" id="AuthorizationInputEmail" aria-describedby="AuthorizationEmailHelp" name="email"
+                required>
+              <div id="AuthorizationEmailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+            </div>
+            <div class="mb-3">
+              <label for="AuthorizationInputPassword" class="form-label">Пароль</label>
+              <input type="password" class="form-control" id="AuthorizationInputPassword" name="psw" required>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="AuthorizationCheck" name="remainme">
+              <label class="form-check-label" for="AuthorizationCheck">Запомни меня</label>
+            </div>
+            {% for cat,msg in get_flashed_messages(True) %}
+                <div class="flash {{cat}}">{{msg}}</div>
+            {% endfor %}
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal"
+                data-bs-target="#RegisterModal">Регистрация</button>
+              <button type="submit" class="btn btn-primary">Войти</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="RegisterModal" tabindex="-1" aria-labelledby="RegisterLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="RegisterLabel">Регистрация</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/register" method="post">
+            <div class="mb-3">
+              <label for="RegisterName" class="form-label">Имя</label>
+              <input type="text" class="form-control" id="RegisterName" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label for="RegisterEmail" class="form-label">Адрес электронной почты</label>
+              <input type="email" class="form-control" id="RegisterEmail" aria-describedby="RegisterEmailHelp" name="email"
+                required>
+              <div id="RegisterEmailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+            </div>
+            <div class="mb-3">
+              <label for="RegisterPassword" class="form-label">Пароль</label>
+              <input type="password" class="form-control" id="RegisterPassword" name="psw" required>
+            </div>
+            <div class="mb-3">
+              <label for="RegisterPassword2" class="form-label">Повторить пароль</label>
+              <input type="password" class="form-control" id="RegisterPassword2" name="psw2" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal"
+                    data-bs-target="#AuthorizationModal">Авторизация</button>
+              <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock mainmenu%}
+
+  {%endblock%}
+
+<footer class="footer bg-body-secondary mt-auto">
+          <div class="container-fluid">
+               <div class="row">
+                    <div class="col-lg-11 col-11">
+                        <p class="copyright-text text-center">Copyright &copy; 2024 Denizer1305's Company. All rights reserved</p>
+                        <p class="copyright-text text-center">Designed by <a rel="nofollow" href="#">Danilov Dmitry</a></p>
+                    </div>
+               </div>
+          </div>
+     </footer>
+
+  <script>
+    var myModal = document.getElementById('myModal')
+    var myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', function () {
+      myInput.focus()
+    })
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+</body>
+</html>

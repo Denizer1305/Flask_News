@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+    {{ super() }}
+<p>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#AuthorizationModal">Авторизируетесь</a>
+     для доступа к страницам</p>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+    document.querySelector("#authorizationClick").click()
+    })
+</script>
+{% endblock %}

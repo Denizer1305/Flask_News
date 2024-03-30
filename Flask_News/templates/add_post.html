@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {{ super() }}
+{% for cat,msg in get_flashed_messages(True) %}
+    <div class="flash {{cat}}">{{msg}}</div>
+{% endfor %}
+<form action="{{url_for('addPost')}}" method="post" class="form-addpost">
+  <div class="mb-3">
+    <label for="exampleInputSite" class="form-label">Источник</label>
+    <input type="text" class="form-control" id="exampleInputSite" aria-describedby="emailHelp" name="name" required>
+    <div id="emailHelp" class="form-text">Адрес сайта или источник информации.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputAuthor" class="form-label">Автор статьи</label>
+    <input type="text" class="form-control" id="exampleInputAuthor" aria-describedby="emailHelp" name="author">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputTitle" class="form-label">Заголовок статьи</label>
+    <input type="text" class="form-control" id="exampleInputTitle" aria-describedby="emailHelp" name="title" required>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputDescription" class="form-label">Краткое описание статьи</label>
+    <input type="text" class="form-control" id="exampleInputDescription" aria-describedby="emailHelp" name="description" required>
+        <div id="descriptionHelp" class="form-text">Описание для карточки новости.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputImage" class="form-label">Url картинки</label>
+    <input type="text" class="form-control" id="exampleInputImage" aria-describedby="emailHelp" name="urlToImage" required>
+        <div id="imageHelp" class="form-text">Ссылка на картинку для карточки новости.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputUrl" class="form-label">Url</label>
+    <input type="text" class="form-control" id="exampleInputUrl" aria-describedby="emailHelp" name="url" required>
+        <div id="urlHelp" class="form-text">Ссылка на используемый материал для написания статьи.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputText" class="form-label">Текст статьи</label>
+    <textarea class="form-control" id="exampleInputText" aria-describedby="emailHelp" name="post" rows="7" cols="40" required></textarea>
+        <div id="textHelp" class="form-text">Полный текст статьи. Допускается HTML разметка.</div>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+     <button type="submit" class="btn btn-primary ">Добавить</button>
+  </div>
+
+</form>
+{% endblock %}
